@@ -1,0 +1,933 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package visao;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import modeloBeans.BeansTabela;
+import modeloBeans.BeansTrabalho;
+import modeloConection.ConexaoBD;
+import modeloDao.DaoAluno;
+import modeloDao.DaoTrabalho;
+import javax.swing.DefaultListModel;
+
+/**
+ *
+ * @author TI-MANUTENÇÃO
+ */
+public final class FormTrabalho extends javax.swing.JFrame {
+
+    private DefaultListModel lista = new DefaultListModel();
+    BeansTrabalho mod = new BeansTrabalho();
+    DaoTrabalho control = new DaoTrabalho();
+    DaoAluno controlAluno = new DaoAluno();
+    ConexaoBD conex = new ConexaoBD();
+    int flag = 0;
+    String nomePessoa;
+    String nomeCoo;
+    String nomeAluno;
+    String nomeInt;
+
+    public FormTrabalho() {
+        initComponents();
+        preencherTable("select *from trabalho ORDER BY titulo");
+        preencherAluno();
+        preencherPessoa();
+        preencherEvento();
+        jComboBoxAlunoLider.setSelectedItem(null);
+        jComboBoxIntegrantes.setSelectedItem(null);
+        jComboBoxOrientador.setSelectedItem(null);
+        jComboBoxCoorientador.setSelectedItem(null);
+        jComboBoxEvento.setSelectedItem(null);
+     
+    }
+
+    public void buscaOrientadorNome(int idPessoa) {
+        conex.conexao();
+        conex.executaSQL("select *from pessoa where idpessoa like'%" + idPessoa + "%'");
+        try {
+            conex.rs.first();
+            nomePessoa = conex.rs.getString("nome");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Pessoa não cadastrada!");
+        }
+    }
+    public void buscaCoorientadorNome(int idPessoa) {
+        conex.conexao();
+        conex.executaSQL("select *from pessoa where idpessoa like'%" + idPessoa + "%'");
+        try {
+            conex.rs.first();
+            nomeCoo = conex.rs.getString("nome");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Pessoa não cadastrada!");
+        }
+    }
+    public void buscaAlunoNome(int idAluno) {
+        conex.conexao();
+        conex.executaSQL("select *from aluno where idaluno like'%" + idAluno + "%'");
+        try {
+            conex.rs.first();
+            nomeAluno= conex.rs.getString("nome");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Aluno não cadastrado!");
+        }
+    }
+     public void buscaIntegranteNome(int idAluno) {
+        conex.conexao();
+        conex.executaSQL("select *from aluno where idaluno like'%" + idAluno + "%'");
+        try {
+            conex.rs.first();
+            nomeInt= conex.rs.getString("nome");
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Aluno não cadastrado!");
+        }
+    }
+    public void preencherAluno() {
+        conex.conexao();
+        conex.executaSQL("select nome from aluno");
+
+        try {
+            conex.rs.first();
+            jComboBoxAlunoLider.removeAllItems();
+            jComboBoxIntegrantes.removeAllItems();
+            do {
+                jComboBoxAlunoLider.addItem(conex.rs.getString("nome"));
+                jComboBoxIntegrantes.addItem(conex.rs.getString("nome"));
+            } while (conex.rs.next());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possível fazer o preenchimento" + e);
+        }
+        conex.desconecta();
+    }
+
+    public void preencherPessoa() {
+        conex.conexao();
+        conex.executaSQL("select nome from pessoa");
+
+        try {
+            conex.rs.first();
+            jComboBoxOrientador.removeAllItems();
+            do {
+                jComboBoxOrientador.addItem(conex.rs.getString("nome"));
+                jComboBoxCoorientador.addItem(conex.rs.getString("nome"));
+            } while (conex.rs.next());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possível fazer o preenchimento" + e);
+        }
+        conex.desconecta();
+    }
+
+    public void preencherEvento() {
+        conex.conexao();
+        conex.executaSQL("select nome from evento");
+
+        try {
+            conex.rs.first();
+            jComboBoxEvento.removeAllItems();
+            do {
+                jComboBoxEvento.addItem(conex.rs.getString("nome"));
+            } while (conex.rs.next());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possível fazer o preenchimento" + e);
+        }
+        conex.desconecta();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jButtonNovo = new javax.swing.JButton();
+        jButtonSalvar = new javax.swing.JButton();
+        jButtonEditar = new javax.swing.JButton();
+        jButtonCancelar = new javax.swing.JButton();
+        jButtonExcluir = new javax.swing.JButton();
+        jTextFieldPesquisa = new javax.swing.JTextField();
+        jButtonpesquisar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableTrabalho = new javax.swing.JTable();
+        jTextFieldID = new javax.swing.JTextField();
+        jLabelID = new javax.swing.JLabel();
+        jLabelTitulo = new javax.swing.JLabel();
+        jTextFieldTitulo = new javax.swing.JTextField();
+        jLabelAlunoLider = new javax.swing.JLabel();
+        jLabelOrientador = new javax.swing.JLabel();
+        jLabelCoorientador = new javax.swing.JLabel();
+        jTextFieldEquipamentos = new javax.swing.JTextField();
+        jLabelIntegrantes = new javax.swing.JLabel();
+        jLabelResumo = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextAreaResumo = new javax.swing.JTextArea();
+        jLabelEquipamentos = new javax.swing.JLabel();
+        jComboBoxAlunoLider = new javax.swing.JComboBox<>();
+        jComboBoxOrientador = new javax.swing.JComboBox<>();
+        jComboBoxCoorientador = new javax.swing.JComboBox<>();
+        jComboBoxIntegrantes = new javax.swing.JComboBox<>();
+        jLabelCoorientadorEvento = new javax.swing.JLabel();
+        jComboBoxEvento = new javax.swing.JComboBox<>();
+        jLabelCadPessoa = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        getContentPane().setLayout(null);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jButtonNovo.setText("Novo");
+        jButtonNovo.setMaximumSize(new java.awt.Dimension(75, 23));
+        jButtonNovo.setMinimumSize(new java.awt.Dimension(75, 23));
+        jButtonNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonNovoActionPerformed(evt);
+            }
+        });
+
+        jButtonSalvar.setText("Salvar");
+        jButtonSalvar.setEnabled(false);
+        jButtonSalvar.setMaximumSize(new java.awt.Dimension(60, 23));
+        jButtonSalvar.setMinimumSize(new java.awt.Dimension(60, 23));
+        jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSalvarActionPerformed(evt);
+            }
+        });
+
+        jButtonEditar.setText("Editar");
+        jButtonEditar.setEnabled(false);
+        jButtonEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditarActionPerformed(evt);
+            }
+        });
+
+        jButtonCancelar.setText("Cancelar");
+        jButtonCancelar.setEnabled(false);
+        jButtonCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCancelarActionPerformed(evt);
+            }
+        });
+
+        jButtonExcluir.setText("Excluir");
+        jButtonExcluir.setEnabled(false);
+        jButtonExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonExcluirActionPerformed(evt);
+            }
+        });
+
+        jTextFieldPesquisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldPesquisaActionPerformed(evt);
+            }
+        });
+
+        jButtonpesquisar.setText("Pesquisar");
+        jButtonpesquisar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonpesquisarActionPerformed(evt);
+            }
+        });
+
+        jTableTrabalho.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jTableTrabalho.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableTrabalhoMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTableTrabalho);
+
+        jTextFieldID.setEnabled(false);
+        jTextFieldID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldIDActionPerformed(evt);
+            }
+        });
+
+        jLabelID.setText("ID:");
+
+        jLabelTitulo.setText("Título:");
+
+        jTextFieldTitulo.setEnabled(false);
+        jTextFieldTitulo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldTituloActionPerformed(evt);
+            }
+        });
+
+        jLabelAlunoLider.setText("Aluno líder:");
+
+        jLabelOrientador.setText("Orientador:");
+
+        jLabelCoorientador.setText("Coorientador:");
+
+        jTextFieldEquipamentos.setEnabled(false);
+        jTextFieldEquipamentos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldEquipamentosActionPerformed(evt);
+            }
+        });
+
+        jLabelIntegrantes.setText("Integrantes do grupo:");
+
+        jLabelResumo.setText("Resumo:");
+
+        jTextAreaResumo.setColumns(20);
+        jTextAreaResumo.setRows(5);
+        jTextAreaResumo.setEnabled(false);
+        jScrollPane2.setViewportView(jTextAreaResumo);
+
+        jLabelEquipamentos.setText("Equipamentos:");
+
+        jComboBoxAlunoLider.setEnabled(false);
+        jComboBoxAlunoLider.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxAlunoLiderActionPerformed(evt);
+            }
+        });
+
+        jComboBoxOrientador.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        jComboBoxOrientador.setEnabled(false);
+
+        jComboBoxCoorientador.setEnabled(false);
+
+        jComboBoxIntegrantes.setEnabled(false);
+        jComboBoxIntegrantes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxIntegrantesActionPerformed(evt);
+            }
+        });
+
+        jLabelCoorientadorEvento.setText("Evento:");
+
+        jComboBoxEvento.setEnabled(false);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButtonExcluir, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonCancelar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonSalvar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonNovo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonEditar, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabelIntegrantes)
+                                    .addComponent(jLabelTitulo)
+                                    .addComponent(jLabelID)
+                                    .addComponent(jLabelAlunoLider)
+                                    .addComponent(jLabelOrientador)
+                                    .addComponent(jLabelCoorientador)))
+                            .addComponent(jLabelResumo)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelEquipamentos, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabelCoorientadorEvento, javax.swing.GroupLayout.Alignment.TRAILING))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBoxEvento, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldEquipamentos)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jComboBoxCoorientador, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxOrientador, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxAlunoLider, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxIntegrantes, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jTextFieldTitulo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jTextFieldPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 394, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonpesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addComponent(jButtonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelID)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(7, 7, 7)
+                        .addComponent(jButtonEditar)
+                        .addGap(8, 8, 8)
+                        .addComponent(jButtonCancelar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonExcluir))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextFieldTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelTitulo))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBoxAlunoLider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelAlunoLider))
+                        .addGap(5, 5, 5)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBoxIntegrantes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelIntegrantes))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBoxOrientador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelOrientador))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBoxCoorientador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelCoorientador))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelResumo))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldEquipamentos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelEquipamentos))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxEvento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelCoorientadorEvento))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextFieldPesquisa, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonpesquisar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(jPanel1);
+        jPanel1.setBounds(10, 30, 730, 590);
+
+        jLabelCadPessoa.setFont(new java.awt.Font("Tahoma", 1, 15)); // NOI18N
+        jLabelCadPessoa.setText("Cadastro de Trabalhos");
+        getContentPane().add(jLabelCadPessoa);
+        jLabelCadPessoa.setBounds(290, 0, 180, 30);
+
+        setSize(new java.awt.Dimension(766, 669));
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNovoActionPerformed
+        // TODO add your handling code here:
+        flag = 1;
+
+        jTextFieldTitulo.setEnabled(true);
+        jComboBoxAlunoLider.setEnabled(true);
+        jComboBoxIntegrantes.setEnabled(true);
+      
+        jComboBoxOrientador.setEnabled(true);
+        jComboBoxCoorientador.setEnabled(true);
+        jTextAreaResumo.setEnabled(true);
+        jComboBoxEvento.setEnabled(true);
+        jTextFieldEquipamentos.setEnabled(true);
+
+        jTextFieldID.setText("");
+        jTextFieldTitulo.setText("");
+        jComboBoxAlunoLider.setSelectedItem(null);
+        jComboBoxIntegrantes.setSelectedItem(null);
+        jComboBoxOrientador.setSelectedItem(null);
+        jComboBoxCoorientador.setSelectedItem(null);
+        jTextAreaResumo.setText("");
+        jComboBoxEvento.setSelectedItem(null);
+        jTextFieldEquipamentos.setText("");
+        jTextFieldPesquisa.setText("");
+
+        jButtonSalvar.setEnabled(true);
+        jButtonCancelar.setEnabled(true);
+        jButtonExcluir.setEnabled(false);
+        jButtonEditar.setEnabled(false);
+        jTextFieldPesquisa.setEnabled(false);
+        jButtonpesquisar.setEnabled(false);
+        preencherTable("select *from trabalho ORDER BY titulo");
+    }//GEN-LAST:event_jButtonNovoActionPerformed
+
+    private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
+        // TODO add your handling code here:
+        if (jTextFieldTitulo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o título para prosseguir");
+            jTextFieldTitulo.requestFocus();
+        } else if (jComboBoxAlunoLider.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Escolha o aluno líder para prosseguir");
+            jComboBoxAlunoLider.requestFocus();
+        } else if (jComboBoxIntegrantes.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Escolha os integrantes para prosseguir");
+            jComboBoxIntegrantes.requestFocus();
+        } else if (jComboBoxOrientador.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Escolha o orientador para prosseguir");
+            jComboBoxOrientador.requestFocus();
+        } else if (jComboBoxCoorientador.getSelectedItem() == null) {
+            /*Colocar outro IF pra ver quantos integrantes deve ter*/
+            JOptionPane.showMessageDialog(null, "Escolha o coorientador para prosseguir");
+            jComboBoxCoorientador.requestFocus();
+        } else if (jTextAreaResumo.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha o resumo do trabalho para prosseguir");
+            jTextAreaResumo.requestFocus();
+        } else if (jComboBoxEvento.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(null, "Escolha o evento para prosseguir");
+            jComboBoxOrientador.requestFocus();
+        } else if (jTextFieldEquipamentos.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Preencha os equipamentos para prosseguir");
+            jTextFieldEquipamentos.requestFocus();
+        } else if (flag == 1) {
+
+            mod.setTitulo(jTextFieldTitulo.getText());
+            mod.setAlunoLider((String) jComboBoxAlunoLider.getSelectedItem());
+            mod.setListadeIntegrantes((String) jComboBoxIntegrantes.getSelectedItem());
+            mod.setOrientador((String) jComboBoxOrientador.getSelectedItem());
+            mod.setCoorientador((String) jComboBoxCoorientador.getSelectedItem());
+            mod.setResumo(jTextAreaResumo.getText());
+            mod.setEquipamentos(jTextFieldEquipamentos.getText());
+            mod.setEvento((String) jComboBoxEvento.getSelectedItem());
+            control.salvar(mod);
+            jTextFieldID.setText("");
+            jTextFieldTitulo.setText("");
+            jComboBoxAlunoLider.setSelectedItem(null);
+            jComboBoxIntegrantes.setSelectedItem(null);
+            jComboBoxOrientador.setSelectedItem(null);
+            jComboBoxCoorientador.setSelectedItem(null);
+            jTextAreaResumo.setText("");
+            jTextFieldEquipamentos.setText("");
+            jComboBoxEvento.setSelectedItem(null);
+            jTextFieldPesquisa.setText("");
+
+            jTextFieldTitulo.setEnabled(false);
+            jComboBoxAlunoLider.setEnabled(false);
+            jComboBoxIntegrantes.setEnabled(false);
+            jComboBoxOrientador.setEnabled(false);
+            jComboBoxCoorientador.setEnabled(false);
+            jTextAreaResumo.setEnabled(false);
+            jTextFieldEquipamentos.setEnabled(false);
+            
+            jComboBoxEvento.setEnabled(false);
+            jButtonSalvar.setEnabled(false);
+            jButtonNovo.setEnabled(true);
+            jButtonCancelar.setEnabled(false);
+            jTextFieldPesquisa.setEnabled(false);
+            jButtonpesquisar.setEnabled(false);
+            preencherTable("select *from trabalho ORDER BY titulo");
+
+        } else {
+            mod.setIdtrabalho(Integer.parseInt(jTextFieldID.getText()));
+            mod.setTitulo(jTextFieldTitulo.getText());
+            mod.setAlunoLider((String) jComboBoxAlunoLider.getSelectedItem());
+            mod.setListadeIntegrantes((String) jComboBoxIntegrantes.getSelectedItem());
+            mod.setOrientador((String) jComboBoxOrientador.getSelectedItem());
+            mod.setCoorientador((String) jComboBoxCoorientador.getSelectedItem());
+            mod.setResumo(jTextAreaResumo.getText());
+            mod.setEquipamentos(jTextFieldEquipamentos.getText());
+            mod.setEvento((String) jComboBoxEvento.getSelectedItem());
+            control.EditarPessoa(mod);
+
+            jTextFieldID.setText("");
+            jTextFieldTitulo.setText("");
+            jComboBoxAlunoLider.setSelectedItem(null);
+            jComboBoxIntegrantes.setSelectedItem(null);
+            jComboBoxOrientador.setSelectedItem(null);
+            jComboBoxCoorientador.setSelectedItem(null);
+            jTextAreaResumo.setText("");
+            jTextFieldEquipamentos.setText("");
+            jComboBoxEvento.setSelectedItem(null);
+            jTextFieldPesquisa.setText("");
+
+            jTextFieldTitulo.setEnabled(false);
+            jComboBoxAlunoLider.setEnabled(false);
+            jComboBoxIntegrantes.setEnabled(false);
+            jComboBoxOrientador.setEnabled(false);
+            jComboBoxCoorientador.setEnabled(false);
+            jTextAreaResumo.setEnabled(false);
+            jTextFieldEquipamentos.setEnabled(false);
+            
+            jComboBoxEvento.setEnabled(false);
+            jButtonSalvar.setEnabled(false);
+            jButtonNovo.setEnabled(true);
+            jButtonCancelar.setEnabled(false);
+            jButtonSalvar.setEnabled(false);
+            jButtonNovo.setEnabled(true);
+            jButtonCancelar.setEnabled(false);
+            jTextFieldPesquisa.setEnabled(false);
+            jButtonpesquisar.setEnabled(false);
+            preencherTable("select *from trabalho ORDER BY titulo");
+
+        }
+    }//GEN-LAST:event_jButtonSalvarActionPerformed
+
+    private void jButtonEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditarActionPerformed
+        // TODO add your handling code here:
+        flag = 2;
+
+        jTextFieldTitulo.setEnabled(true);
+        jComboBoxAlunoLider.setEnabled(true);
+        jComboBoxIntegrantes.setEnabled(true);
+        jComboBoxOrientador.setEnabled(true);
+        jComboBoxCoorientador.setEnabled(true);
+        jTextAreaResumo.setEnabled(true);
+        jTextFieldEquipamentos.setEnabled(true);
+       
+        jComboBoxEvento.setEnabled(true);
+        jButtonSalvar.setEnabled(true);
+        jButtonCancelar.setEnabled(true);
+        jButtonEditar.setEnabled(false);
+        jButtonNovo.setEnabled(false);
+        jButtonExcluir.setEnabled(true);
+
+        jTextFieldTitulo.setText("");
+        jComboBoxAlunoLider.setSelectedItem(null);
+        jComboBoxIntegrantes.setSelectedItem(null);
+        jComboBoxOrientador.setSelectedItem(null);
+        jComboBoxCoorientador.setSelectedItem(null);
+        jTextAreaResumo.setText("");
+        jTextFieldEquipamentos.setText("");
+        jComboBoxEvento.setSelectedItem(null);
+        jTextFieldPesquisa.setText("");
+        jTextFieldPesquisa.setEnabled(false);
+        jButtonpesquisar.setEnabled(false);
+
+        preencherTable("select *from trabalho ORDER BY titulo");
+    }//GEN-LAST:event_jButtonEditarActionPerformed
+
+    private void jButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelarActionPerformed
+        // TODO add your handling code here:
+        jTextFieldTitulo.setEnabled(!true);
+        jComboBoxAlunoLider.setEnabled(!true);
+        jComboBoxIntegrantes.setSelectedItem(!true);
+        jComboBoxOrientador.setEnabled(!true);
+        jComboBoxCoorientador.setEnabled(!true);
+        jTextAreaResumo.setEnabled(!true);
+        jTextFieldEquipamentos.setEnabled(!true);
+        jComboBoxEvento.setEnabled(!true);
+        
+        jButtonSalvar.setEnabled(!true);
+        jButtonCancelar.setEnabled(!true);
+        jButtonNovo.setEnabled(true);
+        jButtonEditar.setEnabled(false);
+        jButtonExcluir.setEnabled(false);
+        jTextFieldID.setText("");
+        jTextFieldTitulo.setText("");
+        jComboBoxAlunoLider.setSelectedItem(null);
+        jComboBoxIntegrantes.setSelectedItem(null);
+        jComboBoxOrientador.setSelectedItem(null);
+        jComboBoxCoorientador.setSelectedItem(null);
+        jTextAreaResumo.setText("");
+        jTextFieldEquipamentos.setText("");
+        jComboBoxEvento.setSelectedItem(null);
+        jTextFieldPesquisa.setText("");
+
+        jTextFieldPesquisa.setEnabled(true);
+        jButtonpesquisar.setEnabled(true);
+    }//GEN-LAST:event_jButtonCancelarActionPerformed
+
+    private void jButtonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExcluirActionPerformed
+        // TODO add your handling code here:
+        int resposta = 0;
+        resposta = JOptionPane.showConfirmDialog(rootPane, "Deseja realmente excluir?");
+        if (resposta == JOptionPane.YES_OPTION) {
+            mod.setIdtrabalho(Integer.parseInt(jTextFieldID.getText()));
+            control.ExcluirTrabalho(mod);
+            jButtonExcluir.setEnabled(false);
+            jTextFieldID.setText("");
+            jTextFieldTitulo.setText("");
+            jComboBoxAlunoLider.setSelectedItem(null);
+            jComboBoxIntegrantes.setSelectedItem(null);
+            jComboBoxOrientador.setSelectedItem(null);
+            jComboBoxCoorientador.setSelectedItem(null);
+            jTextAreaResumo.setText("");
+            jTextFieldEquipamentos.setText("");
+            jComboBoxEvento.setSelectedItem(null);
+            jTextFieldPesquisa.setText("");
+
+            jTextFieldTitulo.setEnabled(false);
+            jComboBoxAlunoLider.setEnabled(false);
+            jComboBoxIntegrantes.setEnabled(false);
+            jComboBoxOrientador.setEnabled(false);
+            jComboBoxCoorientador.setEnabled(false);
+            jTextAreaResumo.setEnabled(false);
+            jTextFieldEquipamentos.setEnabled(false);
+          
+            jComboBoxEvento.setEnabled(false);
+
+            jButtonSalvar.setEnabled(false);
+            jButtonNovo.setEnabled(true);
+            jButtonCancelar.setEnabled(false);
+            jButtonEditar.setEnabled(false);
+            jTextFieldPesquisa.setEnabled(false);
+            jButtonpesquisar.setEnabled(false);
+            preencherTable("select *from trabalho ORDER BY titulo");
+
+        }
+    }//GEN-LAST:event_jButtonExcluirActionPerformed
+
+    private void jTextFieldPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldPesquisaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldPesquisaActionPerformed
+
+    private void jButtonpesquisarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonpesquisarActionPerformed
+        // TODO add your handling code here:
+        mod.setPesquisa(jTextFieldPesquisa.getText());
+        BeansTrabalho model = control.buscaTrabalho(mod);
+
+        jTextFieldID.setText(String.valueOf(model.getIdtrabalho()));
+        jTextFieldTitulo.setText(model.getTitulo());
+        jComboBoxAlunoLider.setSelectedItem(model.getAlunoLider());
+        jComboBoxIntegrantes.setSelectedItem(model.getListadeIntegrantes());
+        jComboBoxOrientador.setSelectedItem(model.getOrientador());
+        jComboBoxCoorientador.setSelectedItem(model.getCoorientador());
+        jTextAreaResumo.setText(model.getResumo());
+        jTextFieldEquipamentos.setText(model.getEquipamentos());
+
+        jTextFieldID.setText("");
+        jTextFieldTitulo.setText("");
+        jComboBoxAlunoLider.setSelectedItem(null);
+        jComboBoxIntegrantes.setSelectedItem(null);
+        jComboBoxOrientador.setSelectedItem(null);
+        jComboBoxCoorientador.setSelectedItem(null);
+        jTextAreaResumo.setText("");
+        jTextFieldEquipamentos.setText("");
+        jComboBoxEvento.setSelectedItem(null);
+        
+
+        jTextFieldTitulo.setEnabled(false);
+        jComboBoxAlunoLider.setEnabled(false);
+        jComboBoxIntegrantes.setEnabled(false);
+        jComboBoxOrientador.setEnabled(false);
+        jComboBoxCoorientador.setEnabled(false);
+        jTextAreaResumo.setEnabled(false);
+        jTextFieldEquipamentos.setEnabled(false);
+       
+        jComboBoxEvento.setEnabled(false);
+        jButtonEditar.setEnabled(false);
+        jButtonExcluir.setEnabled(false);
+        preencherTable("select * from trabalho where titulo like'%" + mod.getPesquisa() + "%' order by titulo");
+    }//GEN-LAST:event_jButtonpesquisarActionPerformed
+
+    private void jTextFieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldIDActionPerformed
+
+    private void jTextFieldTituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTituloActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldTituloActionPerformed
+
+    private void jTextFieldEquipamentosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldEquipamentosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldEquipamentosActionPerformed
+
+    private void jComboBoxIntegrantesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxIntegrantesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxIntegrantesActionPerformed
+
+    private void jTableTrabalhoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableTrabalhoMouseClicked
+        // TODO add your handling code here:
+        String nome = "" + jTableTrabalho.getValueAt(jTableTrabalho.getSelectedRow(), 1);
+        conex.conexao();
+        conex.executaSQL("select *from trabalho where titulo like'%" + nome + "%'");
+        try {
+            conex.rs.first();
+            jTextFieldID.setText(String.valueOf(conex.rs.getInt("idtrabalho")));
+            jTextFieldTitulo.setText(conex.rs.getString("titulo"));
+            buscaAlunoNome(conex.rs.getInt("alunoLider"));
+            jComboBoxAlunoLider.setSelectedItem(nomeAluno);
+            buscaIntegranteNome(conex.rs.getInt("integrantes"));
+            jComboBoxIntegrantes.setSelectedItem(nomeInt);
+            buscaOrientadorNome(conex.rs.getInt("orientador"));
+            jComboBoxOrientador.setSelectedItem(nomePessoa);
+            buscaCoorientadorNome(conex.rs.getInt("coorientador"));
+            jComboBoxCoorientador.setSelectedItem(nomeCoo);
+            jTextAreaResumo.setText(conex.rs.getString("resumo"));
+            jTextFieldEquipamentos.setText(conex.rs.getString("equipamentos"));
+            jComboBoxEvento.setSelectedItem(conex.rs.getInt("evento"));
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao selecionar os dados"+ex);
+        }
+        conex.desconecta();
+        jTextFieldTitulo.setEnabled(false);
+        jComboBoxAlunoLider.setEnabled(false);
+        jComboBoxIntegrantes.setEnabled(false);
+        jComboBoxOrientador.setEnabled(false);
+        jComboBoxCoorientador.setEnabled(false);
+        jTextAreaResumo.setEnabled(false);
+        jTextFieldEquipamentos.setEnabled(false);
+       
+        jComboBoxEvento.setEnabled(false);
+        jButtonSalvar.setEnabled(false);
+        jButtonEditar.setEnabled(true);
+        jButtonExcluir.setEnabled(true);
+        jButtonNovo.setEnabled(false);
+        jButtonCancelar.setEnabled(true);
+    }//GEN-LAST:event_jTableTrabalhoMouseClicked
+
+    private void jComboBoxAlunoLiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAlunoLiderActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxAlunoLiderActionPerformed
+
+    /**
+     * @param sql
+     */
+    public void preencherTable(String sql) {
+        ArrayList dados = new ArrayList();
+        String[] colunas = new String[]{"ID", "TITULO", "ALUNO LÍDER", "INTEGRANTE", "ORIENTADOR", "COORIENTADOR", "RESUMO", "EQUIPAMENTOS", "EVENTO"};
+        conex.conexao();
+        conex.executaSQL(sql);
+
+        try {
+            conex.rs.first();
+            do {
+                dados.add(new Object[]{conex.rs.getInt("idtrabalho"), conex.rs.getString("titulo"), conex.rs.getInt("alunoLider"),
+                    conex.rs.getInt("integrantes"), conex.rs.getInt("orientador"), conex.rs.getInt("coorientador"),
+                    conex.rs.getString("resumo"), conex.rs.getString("equipamentos"), conex.rs.getString("evento")});
+            } while (conex.rs.next());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Não foi possível fazer o preenchimento" + e);
+        }
+        BeansTabela modelo = new BeansTabela(dados, colunas);
+        jTableTrabalho.setModel(modelo);
+        jTableTrabalho.getColumnModel().getColumn(0).setPreferredWidth(25);
+        jTableTrabalho.getColumnModel().getColumn(0).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(1).setPreferredWidth(180);
+        jTableTrabalho.getColumnModel().getColumn(1).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(2).setPreferredWidth(100);
+        jTableTrabalho.getColumnModel().getColumn(2).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(3).setPreferredWidth(60);
+        jTableTrabalho.getColumnModel().getColumn(3).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(4).setPreferredWidth(320);
+        jTableTrabalho.getColumnModel().getColumn(4).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(5).setPreferredWidth(200);
+        jTableTrabalho.getColumnModel().getColumn(5).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(6).setPreferredWidth(60);
+        jTableTrabalho.getColumnModel().getColumn(6).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(7).setPreferredWidth(320);
+        jTableTrabalho.getColumnModel().getColumn(7).setResizable(false);
+        jTableTrabalho.getColumnModel().getColumn(8).setPreferredWidth(200);
+        jTableTrabalho.getColumnModel().getColumn(8).setResizable(false);
+
+        jTableTrabalho.getTableHeader().setReorderingAllowed(false);
+        jTableTrabalho.setAutoResizeMode(jTableTrabalho.AUTO_RESIZE_OFF);
+        jTableTrabalho.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        conex.desconecta();
+    }
+
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FormTrabalho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FormTrabalho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FormTrabalho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FormTrabalho.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FormTrabalho().setVisible(true);
+            }
+        });
+    }
+
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonEditar;
+    private javax.swing.JButton jButtonExcluir;
+    private javax.swing.JButton jButtonNovo;
+    private javax.swing.JButton jButtonSalvar;
+    private javax.swing.JButton jButtonpesquisar;
+    private javax.swing.JComboBox<Object> jComboBoxAlunoLider;
+    private javax.swing.JComboBox<String> jComboBoxCoorientador;
+    private javax.swing.JComboBox<String> jComboBoxEvento;
+    private javax.swing.JComboBox<Object> jComboBoxIntegrantes;
+    private javax.swing.JComboBox<String> jComboBoxOrientador;
+    private javax.swing.JLabel jLabelAlunoLider;
+    private javax.swing.JLabel jLabelCadPessoa;
+    private javax.swing.JLabel jLabelCoorientador;
+    private javax.swing.JLabel jLabelCoorientadorEvento;
+    private javax.swing.JLabel jLabelEquipamentos;
+    private javax.swing.JLabel jLabelID;
+    private javax.swing.JLabel jLabelIntegrantes;
+    private javax.swing.JLabel jLabelOrientador;
+    private javax.swing.JLabel jLabelResumo;
+    private javax.swing.JLabel jLabelTitulo;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTableTrabalho;
+    private javax.swing.JTextArea jTextAreaResumo;
+    private javax.swing.JTextField jTextFieldEquipamentos;
+    private javax.swing.JTextField jTextFieldID;
+    private javax.swing.JTextField jTextFieldPesquisa;
+    private javax.swing.JTextField jTextFieldTitulo;
+    // End of variables declaration//GEN-END:variables
+class Action implements ActionListener {  //Action
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            lista.addElement(jComboBoxIntegrantes.getSelectedItem());
+           //REaction
+        }
+
+    }
+}
